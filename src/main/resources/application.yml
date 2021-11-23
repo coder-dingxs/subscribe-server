@@ -1,0 +1,18 @@
+server:
+  port: 666
+spring:
+  redis:
+    host: 39.107.248.67
+    password: Dxs&***1314?!
+    port: 16379
+
+logging:
+  level:
+    xyz:
+      dingxs:
+        subscribe: debug
+  file:
+    path: logs
+sniff-task:
+  cron: 0/5 * * * * ?
+token: 7a9f0305db436ed82a0c91f270fd5685
