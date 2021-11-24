@@ -13,6 +13,9 @@ logging:
         subscribe: debug
   file:
     path: logs
+
 sniff-task:
-  cron: 0/5 * * * * ?
-token: 7a9f0305db436ed82a0c91f270fd5685
+  cron: 0 0/5 * * * ?
+
+token:
+  value: 7a9f0305db436ed82a0c91f270fd5685

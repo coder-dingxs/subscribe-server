@@ -1,11 +1,16 @@
 package xyz.dingxs.subscribe.subscribe.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import xyz.dingxs.subscribe.common.constant.RedisConstant;
+import xyz.dingxs.subscribe.subscribe.dto.SubscribeDto;
+
+import java.util.Base64;
 
 /**
  * 订阅service
@@ -20,6 +25,9 @@ public class SubscribeService {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
 
     /**
      * get url
@@ -27,11 +35,7 @@ public class SubscribeService {
      * @return url
      */
     public String get() {
-        String url = stringRedisTemplate.opsForValue().get(RedisConstant.SUBSCRIBE_URL);
-        if (url == null || "".equals(url)) {
-            url = "";
-        }
-        return url;
+        return stringRedisTemplate.opsForValue().get(RedisConstant.SUBSCRIBE_URL);
     }
 
     /**
@@ -41,10 +45,47 @@ public class SubscribeService {
      * @return 是否成功
      */
     public Boolean set(String url) {
-        // todo 校验url
+        // 校验url
+        if (this.checkUrl(url)) {
+            // 存
+            stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_URL, url);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-        // 存
-        stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_URL, url);
+
+    /**
+     * 校验url
+     *
+     * @param url url
+     * @return 校验结果
+     */
+    public Boolean checkUrl(String url) {
+        try {
+            url = url.substring(8);
+            byte[] urlByteArray = Base64.getDecoder().decode(url);
+            SubscribeDto subscribeDto = objectMapper.readValue(urlByteArray, SubscribeDto.class);
+            if (ObjectUtils.isEmpty(subscribeDto.getAdd())) {
+                return false;
+            }
+            if (ObjectUtils.isEmpty(subscribeDto.getPort())) {
+                return false;
+            }
+            if (ObjectUtils.isEmpty(subscribeDto.getId())) {
+                return false;
+            }
+            if (ObjectUtils.isEmpty(subscribeDto.getAid())) {
+                return false;
+            }
+            if (ObjectUtils.isEmpty(subscribeDto.getNet())) {
+                return false;
+            }
+        } catch (Exception e) {
+            logger.error("url check exception", e);
+        }
         return true;
     }
+
 }
