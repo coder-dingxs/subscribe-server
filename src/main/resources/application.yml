@@ -16,11 +16,15 @@ logging:
 
 springfox:
   documentation:
+    enabled: true
     swagger-ui:
-      enabled: false
+      enabled: true
+      baseUrl: /sw
+    openApi:
+      enabled: true
 
 sniff-task:
   cron: 0 0/5 * * * ?
 
-token:
-  value: 7a9f0305db436ed82a0c91f270fd5685
+authorized:
+  token: 7a9f0305db436ed82a0c91f270fd5685
