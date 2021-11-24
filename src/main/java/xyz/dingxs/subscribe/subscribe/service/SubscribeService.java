@@ -63,29 +63,35 @@ public class SubscribeService {
      * @return 校验结果
      */
     public Boolean checkUrl(String url) {
+        SubscribeDto subscribeDto = this.parse(url);
+        if (ObjectUtils.isEmpty(subscribeDto.getAdd())) {
+            return false;
+        }
+        if (ObjectUtils.isEmpty(subscribeDto.getPort())) {
+            return false;
+        }
+        if (ObjectUtils.isEmpty(subscribeDto.getId())) {
+            return false;
+        }
+        if (ObjectUtils.isEmpty(subscribeDto.getAid())) {
+            return false;
+        }
+        if (ObjectUtils.isEmpty(subscribeDto.getNet())) {
+            return false;
+        }
+        return true;
+    }
+
+    public SubscribeDto parse(String url) {
+        SubscribeDto subscribeDto = null;
         try {
             url = url.substring(8);
             byte[] urlByteArray = Base64.getDecoder().decode(url);
-            SubscribeDto subscribeDto = objectMapper.readValue(urlByteArray, SubscribeDto.class);
-            if (ObjectUtils.isEmpty(subscribeDto.getAdd())) {
-                return false;
-            }
-            if (ObjectUtils.isEmpty(subscribeDto.getPort())) {
-                return false;
-            }
-            if (ObjectUtils.isEmpty(subscribeDto.getId())) {
-                return false;
-            }
-            if (ObjectUtils.isEmpty(subscribeDto.getAid())) {
-                return false;
-            }
-            if (ObjectUtils.isEmpty(subscribeDto.getNet())) {
-                return false;
-            }
+            subscribeDto = objectMapper.readValue(urlByteArray, SubscribeDto.class);
         } catch (Exception e) {
-            logger.error("url check exception", e);
+            logger.error("url parse dto exception", e);
         }
-        return true;
+        return subscribeDto;
     }
 
 }
