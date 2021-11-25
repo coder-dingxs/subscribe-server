@@ -25,7 +25,7 @@ springfox:
       enabled: true
 
 sniff-task:
-  cron: 0 0/5 * * * ?
+  cron: 0 0/1 * * * ?
 
 authorized:
   token: 7a9f0305db436ed82a0c91f270fd5685
