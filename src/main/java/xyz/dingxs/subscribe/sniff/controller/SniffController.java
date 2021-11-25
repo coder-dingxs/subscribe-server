@@ -19,7 +19,7 @@ public class SniffController {
     private SniffService sniffService;
 
     @ApiOperation(value = "获取嗅探状态")
-    @ApiImplicitParam(name = "token", paramType = "header", required = true)
+    @ApiImplicitParam(name = "token", dataType = "java.lang.String", paramType = "header", required = true)
     @GetMapping("/getSniffRes")
     public ResponseEntity<Boolean> getSniffRes() {
         return ResponseEntity.ok(sniffService.getSniffRes());

@@ -42,8 +42,7 @@ public class SniffService {
      * @return 结果
      */
     public Boolean sniff() {
-        String url = subscribeService.get();
-        SubscribeDto subscribeDto = subscribeService.parse(url);
+        SubscribeDto subscribeDto = subscribeService.getSubscribeDto();
         boolean res;
         try {
             Socket socket = new Socket();

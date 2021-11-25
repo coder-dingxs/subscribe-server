@@ -16,6 +16,11 @@ public class RedisConstant {
     public static final String SUBSCRIBE_URL = "subscribe:url";
 
     /**
+     * 订阅dto redis-key
+     */
+    public static final String SUBSCRIBE_DTO = "subscribe:dto";
+
+    /**
      * 嗅探结果 redis-key
      */
     public static final String SNIFF_RES = "sniff:res";

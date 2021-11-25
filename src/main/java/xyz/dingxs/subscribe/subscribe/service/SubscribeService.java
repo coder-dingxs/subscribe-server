@@ -10,6 +10,7 @@ import org.springframework.util.ObjectUtils;
 import xyz.dingxs.subscribe.common.constant.RedisConstant;
 import xyz.dingxs.subscribe.subscribe.dto.SubscribeDto;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
@@ -45,25 +46,37 @@ public class SubscribeService {
      * @return 是否成功
      */
     public Boolean set(String url) {
+        // 解析
+        SubscribeDto subscribeDto = this.parse(url);
         // 校验url
-        if (this.checkUrl(url)) {
-            // 存
+        if (this.check(subscribeDto)) {
+
+            String json = this.parseJson(subscribeDto);
+            // 存两个
             stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_URL, url);
+            stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_DTO, json);
             return true;
         } else {
             return false;
         }
     }
 
+    /**
+     * 从redis取出直接返回
+     *
+     * @return json
+     */
+    public String getConfig() {
+        return stringRedisTemplate.opsForValue().get(RedisConstant.SUBSCRIBE_DTO);
+    }
 
     /**
-     * 校验url
+     * 校验subscribeDto
      *
-     * @param url url
+     * @param subscribeDto subscribeDto
      * @return 校验结果
      */
-    public Boolean checkUrl(String url) {
-        SubscribeDto subscribeDto = this.parse(url);
+    private Boolean check(SubscribeDto subscribeDto) {
         if (ObjectUtils.isEmpty(subscribeDto.getAdd())) {
             return false;
         }
@@ -76,13 +89,16 @@ public class SubscribeService {
         if (ObjectUtils.isEmpty(subscribeDto.getAid())) {
             return false;
         }
-        if (ObjectUtils.isEmpty(subscribeDto.getNet())) {
-            return false;
-        }
-        return true;
+        return !ObjectUtils.isEmpty(subscribeDto.getNet());
     }
 
-    public SubscribeDto parse(String url) {
+    /**
+     * 解析url到java-dto
+     *
+     * @param url url
+     * @return dto
+     */
+    private SubscribeDto parse(String url) {
         SubscribeDto subscribeDto = null;
         try {
             url = url.substring(8);
@@ -94,4 +110,53 @@ public class SubscribeService {
         return subscribeDto;
     }
 
+    /**
+     * 从redis取出后转换为dto返回
+     *
+     * @return SubscribeDto
+     */
+    public SubscribeDto getSubscribeDto() {
+        String config = this.getConfig();
+        try {
+            return objectMapper.readValue(config, SubscribeDto.class);
+        } catch (Exception e) {
+            logger.error("getSubscribeDto Exception", e);
+            return null;
+        }
+    }
+
+    /**
+     * dto to json
+     *
+     * @param subscribeDto dto
+     * @return json
+     */
+    private String parseJson(SubscribeDto subscribeDto) {
+        try {
+            return objectMapper.writeValueAsString(subscribeDto);
+        } catch (Exception e) {
+            logger.error("parseJson Exception", e);
+            return null;
+        }
+    }
+
+    /**
+     * 修改端口，url和dto
+     *
+     * @param port 端口
+     * @return 成功
+     */
+    public Boolean changePort(Integer port) {
+        SubscribeDto subscribeDto = this.getSubscribeDto();
+        subscribeDto.setPort(port.toString());
+
+        String json = this.parseJson(subscribeDto);
+        assert json != null;
+        byte[] encode = Base64.getEncoder().encode(json.getBytes(StandardCharsets.UTF_8));
+        String url = "vmess://" + new String(encode);
+        stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_URL, url);
+        stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_DTO, json);
+
+        return true;
+    }
 }
