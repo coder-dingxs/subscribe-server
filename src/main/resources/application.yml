@@ -12,7 +12,8 @@ logging:
       dingxs:
         subscribe: debug
   file:
-    path: logs/subscribe.log
+    path: logs
+    name: logs/subscribe.log
 
 springfox:
   documentation:
