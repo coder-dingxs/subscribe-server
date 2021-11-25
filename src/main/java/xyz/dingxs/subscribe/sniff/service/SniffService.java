@@ -48,9 +48,12 @@ public class SniffService {
             Socket socket = new Socket();
             InetSocketAddress inetSocketAddress =
                     new InetSocketAddress(subscribeDto.getAdd(), Integer.parseInt(subscribeDto.getPort()));
+            logger.debug("start socket.connect");
             socket.connect(inetSocketAddress, 500);
+            logger.debug("end socket.connect");
             res = true;
         } catch (Exception e) {
+            logger.debug("end socket.connect", e);
             res = false;
         }
         return res;

@@ -27,7 +27,9 @@ public class SniffTask {
 
         logger.debug("start sniff");
         Boolean res = sniffService.sniff();
+        logger.debug("sniff res: {}", res);
         sniffService.setSniffRes(res);
+        logger.debug("redis sniff: {}", res);
         logger.debug("end sniff");
 
     }
