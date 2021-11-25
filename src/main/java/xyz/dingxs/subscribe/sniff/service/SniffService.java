@@ -51,7 +51,6 @@ public class SniffService {
             socket.connect(inetSocketAddress, 500);
             res = true;
         } catch (Exception e) {
-            logger.error("sniff exception", e);
             res = false;
         }
         return res;
