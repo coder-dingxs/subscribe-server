@@ -52,8 +52,10 @@ public class SubscribeService {
         if (this.check(subscribeDto)) {
 
             String json = this.parseJson(subscribeDto);
+            byte[] encode = Base64.getEncoder().encode(url.getBytes(StandardCharsets.UTF_8));
             // 存两个
-            stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_URL, url);
+            stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_URL, new String(encode));
+            assert json != null;
             stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_DTO, json);
             return true;
         } else {
@@ -152,9 +154,11 @@ public class SubscribeService {
 
         String json = this.parseJson(subscribeDto);
         assert json != null;
-        byte[] encode = Base64.getEncoder().encode(json.getBytes(StandardCharsets.UTF_8));
-        String url = "vmess://" + new String(encode);
-        stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_URL, url);
+        byte[] jsonEncode = Base64.getEncoder().encode(json.getBytes(StandardCharsets.UTF_8));
+        String url = "vmess://" + new String(jsonEncode);
+        byte[] urlEncode = Base64.getEncoder().encode(url.getBytes(StandardCharsets.UTF_8));
+
+        stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_URL, new String(urlEncode));
         stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_DTO, json);
 
         return true;
