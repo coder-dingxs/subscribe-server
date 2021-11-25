@@ -29,3 +29,7 @@ sniff-task:
 
 authorized:
   token: 7a9f0305db436ed82a0c91f270fd5685
+
+port-range:
+  min: 10000
+  max: 19999

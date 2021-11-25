@@ -25,4 +25,11 @@ public class SniffController {
         return ResponseEntity.ok(sniffService.getSniffRes());
     }
 
+    @ApiOperation(value = "生成新端口")
+    @ApiImplicitParam(name = "token", dataType = "java.lang.String", paramType = "header", required = true)
+    @GetMapping("/generateNewPort")
+    public ResponseEntity<Integer> generateNewPort() {
+        return ResponseEntity.ok(sniffService.generateNewPort());
+    }
+
 }

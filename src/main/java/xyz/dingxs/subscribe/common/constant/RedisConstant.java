@@ -25,5 +25,10 @@ public class RedisConstant {
      */
     public static final String SNIFF_RES = "sniff:res";
 
+    /**
+     * 端口set
+     */
+    public static final String PORT_SET = "port:set";
+
 
 }
