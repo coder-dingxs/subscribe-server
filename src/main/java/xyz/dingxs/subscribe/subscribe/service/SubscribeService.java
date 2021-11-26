@@ -11,6 +11,7 @@ import xyz.dingxs.subscribe.subscribe.dto.SubscribeDto;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Date;
 
 /**
  * 订阅service
@@ -84,8 +85,11 @@ public class SubscribeService {
      * @return 成功
      */
     public Boolean changePort(Integer port) {
+        Date now = new Date();
         SubscribeDto subscribeDto = this.getSubscribeDto();
+
         subscribeDto.setPort(port.toString());
+        subscribeDto.setPs(subscribeDto.getAdd() + ":" + port + "(" + now + ")");
 
         String json = this.parseJson(subscribeDto);
         assert json != null;
