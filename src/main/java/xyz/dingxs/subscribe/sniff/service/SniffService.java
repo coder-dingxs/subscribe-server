@@ -11,6 +11,7 @@ import xyz.dingxs.subscribe.common.constant.RedisConstant;
 import xyz.dingxs.subscribe.subscribe.dto.SubscribeDto;
 import xyz.dingxs.subscribe.subscribe.service.SubscribeService;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Random;
@@ -53,18 +54,28 @@ public class SniffService {
         SubscribeDto subscribeDto = subscribeService.getSubscribeDto();
         int successCount = 0;
         int failCount = 0;
+        Socket socket = new Socket();
         for (int i = 0; i < subscribeConfigProperties.getSniff().getCount(); i++) {
             try {
-                Socket socket = new Socket();
                 InetSocketAddress inetSocketAddress =
                         new InetSocketAddress(subscribeDto.getAdd(), Integer.parseInt(subscribeDto.getPort()));
                 logger.debug("start socket.connect");
                 socket.connect(inetSocketAddress, 500);
                 logger.debug("end socket.connect");
-                successCount++;
+                if (socket.isConnected()) {
+                    successCount++;
+                } else {
+                    failCount++;
+                }
             } catch (Exception e) {
                 logger.debug("end socket.connect", e);
                 failCount++;
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException ioException) {
+                    logger.error("socket close fail", ioException);
+                }
             }
         }
         logger.debug("successCount: {}", successCount);
