@@ -60,7 +60,7 @@ public class SniffService {
                 InetSocketAddress inetSocketAddress =
                         new InetSocketAddress(subscribeDto.getAdd(), Integer.parseInt(subscribeDto.getPort()));
                 logger.debug("start socket.connect");
-                socket.connect(inetSocketAddress, 500);
+                socket.connect(inetSocketAddress, subscribeConfigProperties.getSniff().getTimeout());
                 logger.debug("end socket.connect");
                 if (socket.isConnected()) {
                     successCount++;

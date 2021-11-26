@@ -28,6 +28,7 @@ subscribe:
   sniff:
     count: 10
     successCount: 8
+    timeout: 1000
     task:
       cron: 0 0/1 * * * ?
   authorized:

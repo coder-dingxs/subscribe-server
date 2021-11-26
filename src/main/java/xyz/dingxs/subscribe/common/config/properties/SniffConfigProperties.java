@@ -10,6 +10,8 @@ public class SniffConfigProperties {
 
     private Integer successCount;
 
+    private Integer timeout;
+
     @NestedConfigurationProperty
     private TaskConfigProperties task;
 
