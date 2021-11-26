@@ -54,9 +54,9 @@ public class SniffService {
         SubscribeDto subscribeDto = subscribeService.getSubscribeDto();
         int successCount = 0;
         int failCount = 0;
-        Socket socket = new Socket();
         for (int i = 0; i < subscribeConfigProperties.getSniff().getCount(); i++) {
             try {
+                Socket socket = new Socket();
                 InetSocketAddress inetSocketAddress =
                         new InetSocketAddress(subscribeDto.getAdd(), Integer.parseInt(subscribeDto.getPort()));
                 logger.debug("start socket.connect");
@@ -64,18 +64,13 @@ public class SniffService {
                 logger.debug("end socket.connect");
                 if (socket.isConnected()) {
                     successCount++;
+                    socket.close();
                 } else {
                     failCount++;
                 }
             } catch (Exception e) {
                 logger.debug("end socket.connect", e);
                 failCount++;
-            } finally {
-                try {
-                    socket.close();
-                } catch (IOException ioException) {
-                    logger.error("socket close fail", ioException);
-                }
             }
         }
         logger.debug("successCount: {}", successCount);
