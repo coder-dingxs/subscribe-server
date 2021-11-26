@@ -3,11 +3,9 @@ package xyz.dingxs.subscribe.subscribe.controller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import xyz.dingxs.subscribe.subscribe.req.SubscribeSetReq;
 import xyz.dingxs.subscribe.subscribe.req.UpdatePortReq;
 import xyz.dingxs.subscribe.subscribe.service.SubscribeService;
 

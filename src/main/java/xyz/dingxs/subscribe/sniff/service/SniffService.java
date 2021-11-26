@@ -11,7 +11,6 @@ import xyz.dingxs.subscribe.common.constant.RedisConstant;
 import xyz.dingxs.subscribe.subscribe.dto.SubscribeDto;
 import xyz.dingxs.subscribe.subscribe.service.SubscribeService;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Random;
