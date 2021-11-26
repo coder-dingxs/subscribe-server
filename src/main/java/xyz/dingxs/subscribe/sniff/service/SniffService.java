@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import xyz.dingxs.subscribe.common.config.PortRangeConfig;
+import xyz.dingxs.subscribe.common.config.properties.SubscribeConfigProperties;
 import xyz.dingxs.subscribe.common.constant.RedisConstant;
 import xyz.dingxs.subscribe.subscribe.dto.SubscribeDto;
 import xyz.dingxs.subscribe.subscribe.service.SubscribeService;
@@ -31,7 +31,7 @@ public class SniffService {
     private SubscribeService subscribeService;
 
     @Autowired
-    private PortRangeConfig portRangeConfig;
+    private SubscribeConfigProperties subscribeConfigProperties;
 
 
     /**
@@ -51,20 +51,25 @@ public class SniffService {
      */
     public Boolean sniff() {
         SubscribeDto subscribeDto = subscribeService.getSubscribeDto();
-        boolean res;
-        try {
-            Socket socket = new Socket();
-            InetSocketAddress inetSocketAddress =
-                    new InetSocketAddress(subscribeDto.getAdd(), Integer.parseInt(subscribeDto.getPort()));
-            logger.debug("start socket.connect");
-            socket.connect(inetSocketAddress, 500);
-            logger.debug("end socket.connect");
-            res = true;
-        } catch (Exception e) {
-            logger.debug("end socket.connect", e);
-            res = false;
+        int successCount = 0;
+        int failCount = 0;
+        for (int i = 0; i < subscribeConfigProperties.getSniff().getCount(); i++) {
+            try {
+                Socket socket = new Socket();
+                InetSocketAddress inetSocketAddress =
+                        new InetSocketAddress(subscribeDto.getAdd(), Integer.parseInt(subscribeDto.getPort()));
+                logger.debug("start socket.connect");
+                socket.connect(inetSocketAddress, 500);
+                logger.debug("end socket.connect");
+                successCount++;
+            } catch (Exception e) {
+                logger.debug("end socket.connect", e);
+                failCount++;
+            }
         }
-        return res;
+        logger.debug("successCount: {}", successCount);
+        logger.debug("failCount: {}", failCount);
+        return subscribeConfigProperties.getSniff().getSuccessCount() <= successCount;
     }
 
     /**
@@ -83,8 +88,8 @@ public class SniffService {
      */
     public Integer generateNewPort() {
 
-        Integer min = portRangeConfig.getMin();
-        Integer max = portRangeConfig.getMax();
+        Integer min = subscribeConfigProperties.getPortRange().getMin();
+        Integer max = subscribeConfigProperties.getPortRange().getMax();
 
         // 生成端口
         Random random = new Random();

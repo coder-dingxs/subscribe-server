@@ -22,7 +22,7 @@ public class SniffTask {
 
     private final Logger logger = LoggerFactory.getLogger(SniffTask.class);
 
-    @Scheduled(cron = "${sniff-task.cron}")
+    @Scheduled(cron = "${subscribe.sniff.task.cron}")
     public void sniff() {
 
         logger.debug("start sniff");

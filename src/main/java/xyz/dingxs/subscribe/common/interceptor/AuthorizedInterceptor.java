@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import xyz.dingxs.subscribe.common.config.AuthorizedConfig;
+import xyz.dingxs.subscribe.common.config.properties.SubscribeConfigProperties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,14 +18,14 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthorizedInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private AuthorizedConfig authorizedConfig;
+    private SubscribeConfigProperties subscribeConfigProperties;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
         String token = request.getHeader("token");
 
-        if (authorizedConfig.getToken().equals(token)) {
+        if (subscribeConfigProperties.getAuthorized().getToken().equals(token)) {
             return true;
         } else {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
