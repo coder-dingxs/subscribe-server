@@ -100,6 +100,7 @@ public class SubscribeService {
         stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_URL, new String(urlEncode));
         stringRedisTemplate.opsForValue().set(RedisConstant.SUBSCRIBE_DTO, json);
 
+        logger.info("配置已经修改：{}",json);
         return true;
     }
 }
