@@ -85,11 +85,10 @@ public class SubscribeService {
      * @return 成功
      */
     public Boolean changePort(Integer port) {
-        Date now = new Date();
+
         SubscribeDto subscribeDto = this.getSubscribeDto();
 
         subscribeDto.setPort(port.toString());
-        subscribeDto.setPs(subscribeDto.getAdd() + ":" + port + "(" + now + ")");
 
         String json = this.parseJson(subscribeDto);
         assert json != null;
