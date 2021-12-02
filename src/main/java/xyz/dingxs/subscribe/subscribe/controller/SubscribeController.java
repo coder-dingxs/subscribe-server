@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import xyz.dingxs.subscribe.subscribe.req.UpdatePortReq;
 import xyz.dingxs.subscribe.subscribe.service.SubscribeService;
 
+import javax.validation.Valid;
+
 
 /**
  * 订阅服务Controller
@@ -32,7 +34,7 @@ public class SubscribeController {
     @ApiOperation(value = "设置新端口")
     @ApiImplicitParam(name = "token", dataType = "java.lang.String", paramType = "header", required = true)
     @PostMapping("/updatePort")
-    public ResponseEntity<Boolean> updatePort(@RequestBody UpdatePortReq req) {
+    public ResponseEntity<Boolean> updatePort(@RequestBody @Valid UpdatePortReq req) {
         return ResponseEntity.ok(subscribeService.changePort(req.getPort()));
     }
 
